@@ -38,17 +38,9 @@ class OA_Dal_Statistics extends OA_Dal
     {
         $where = '';
 
-        $hour = null;
-        $minute = null;
-        $second = null;
-
         if (isset($oStartDate)) {
 
-            $hour = isset($timeZone) ? $oStartDate->hour : 0;
-            $minute = isset($timeZone) ? $oStartDate->minute : 0;
-            $second = isset($timeZone) ? $oStartDate->second : 0;
-
-            $oStart = $this->setTimeAndReturnUTC($oStartDate, $localTZ, $hour, $minute, $second, $timeZone);
+            $oStart = $this->setTimeAndReturnUTC($oStartDate, $localTZ, $oStartDate->hour, $oStartDate->minute, $oStartDate->second, $timeZone);
             $where .= '
                     AND ' .
                 $dateField . ' >= ' . $this->oDbh->quote($oStart->getDate(DATE_FORMAT_ISO), 'timestamp');
@@ -56,11 +48,15 @@ class OA_Dal_Statistics extends OA_Dal
 
         if (isset($oEndDate)) {
 
-            $hour = isset($timeZone) ? $oEndDate->hour : 23;
-            $minute = isset($timeZone) ? $oEndDate->minute : 59;
-            $second = isset($timeZone) ? $oEndDate->second : 59;
+            if ($oEndDate->hour == 0 && $oEndDate->minute == 0 && $oEndDate->second == 0){
+                if ($oStartDate->hour == 0 && $oStartDate->minute == 0 && $oStartDate->second == 0){
+                    $oEndDate->hour = 23;
+                    $oEndDate->minute = 59;
+                    $oEndDate->second = 59;
+                }
+            }
 
-            $oEnd = $this->setTimeAndReturnUTC($oEndDate, $localTZ, $hour, $minute, $second, $timeZone);
+            $oEnd = $this->setTimeAndReturnUTC($oEndDate, $localTZ, $oEndDate->hour, $oEndDate->minute, $oEndDate->second, $timeZone);
             $where .= '
                     AND ' .
                 $dateField . ' <= ' . $this->oDbh->quote($oEnd->getDate(DATE_FORMAT_ISO), 'timestamp');
