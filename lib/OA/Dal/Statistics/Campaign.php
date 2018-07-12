@@ -317,11 +317,7 @@ class OA_Dal_Statistics_Campaign extends OA_Dal_Statistics
         $tableDataIntermadiateAdConnection = $this->quoteTableName('data_intermediate_ad_connection');
         $tableDataIntermadiateAdVariableValue = $this->quoteTableName('data_intermediate_ad_variable_value');
 
-        $localTZ = false;
         $dateField = 'd.tracker_date_time';
-        $orderBy = (isset($timeZone)) ? "ORDER BY d.tracker_date_time" : "";
-
-
 
         $query = "
             SELECT
@@ -344,9 +340,7 @@ class OA_Dal_Statistics_Campaign extends OA_Dal_Statistics
             WHERE
                 TRUE " . // Bit of a hack due to how getWhereDate works.
                 $this->getWhereDate($oStartDate, $oEndDate, $localTZ, $dateField, $timeZone) . "
-                AND b.campaignid = " . $campaignId . "
-            " . $orderBy;
-
+                AND b.campaignid = " . $campaignId;
 
 
         RV::disableErrorHandling();
