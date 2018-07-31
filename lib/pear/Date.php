@@ -735,8 +735,13 @@ class Date
         $d1->copy($xd1);
         $d2 = new Date();
         $d2->copy($xd2);
-        $d1->convertTZ(new Date_TimeZone('UTC'));
-        $d2->convertTZ(new Date_TimeZone('UTC'));
+        // PV-10565 - Do not convert to UTC date are already in UTC
+        if (!$d1->tz->isEqual(new Date_TimeZone(('UTC')))) {
+            $d1->convertTZ(new Date_TimeZone('UTC'));
+        }
+        if (!$d2->tz->isEqual(new Date_TimeZone(('UTC')))) {
+            $d2->convertTZ(new Date_TimeZone('UTC'));
+        }
         $days1 = Date_Calc::dateToDays($d1->day, $d1->month, $d1->year);
         $days2 = Date_Calc::dateToDays($d2->day, $d2->month, $d2->year);
         if ($days1 < $days2) return -1;
