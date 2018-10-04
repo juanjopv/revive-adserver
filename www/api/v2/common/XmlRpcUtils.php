@@ -358,13 +358,14 @@ class XmlRpcUtils
      */
     function _convertDateFromIso8601Format($date, &$oResult, &$oResponseWithError)
     {
-        $datetime = explode('T', $date);
-        $year = substr($datetime[0], 0, (strlen($datetime[0]) - 4));
-        $month = substr($datetime[0], -4, 2);
-        $day = substr($datetime[0], -2, 2);
-        $hour = substr($datetime[1], 0, 2);
-        $minute = substr($datetime[1], 3, 2);
-        $second = substr($datetime[1], 6, 2);
+        $newDate = new Date($date);
+
+        $year = $newDate->year;
+        $month = $newDate->month;
+        $day = $newDate->day;
+        $hour = $newDate->hour;
+        $minute = $newDate->minute;
+        $second = $newDate->second;
 
         // Explicitly allow the "zero date" value to be set
         if (($year == 0) && ($month == 0) && ($day == 0)) {
